@@ -1,0 +1,19 @@
+local util = require "example.util"
+local dscreen = require "dscreen.dscreen"
+
+local h_screen_title = hash("screen_title")
+local h_screen_game = hash("screen_game")
+local h_screen_pause = hash("screen_pause")
+local h_screen_options = hash("screen_options")
+
+function init(self)
+	dscreen.register_screen(h_screen_title, dscreen.screen_types.basic, msg.url("main", "/screen_title_proxy", "collectionproxy"), msg.url("screen_title", "/screen_title", "gui"))
+	dscreen.register_screen(h_screen_game, dscreen.screen_types.basic, msg.url("main", "/screen_game_proxy", "collectionproxy"), msg.url("screen_game", "/screen_game", "gui"))
+	dscreen.register_screen(h_screen_pause, dscreen.screen_types.pause, msg.url("main", "/screen_pause_proxy", "collectionproxy"), msg.url("screen_pause", "/screen_pause", "gui"))
+	dscreen.register_screen(h_screen_options, dscreen.screen_types.pause, msg.url("main", "/screen_options_proxy", "collectionproxy"), msg.url("screen_options", "/screen_options", "gui"))
+	dscreen.push_screen(h_screen_title)
+end
+
+function on_message(self, message_id, message, sender)
+	dscreen.on_message(message_id, message, sender)
+end
