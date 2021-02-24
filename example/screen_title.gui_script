@@ -1,0 +1,16 @@
+local util = require "example.util"
+local dscreen = require "dscreen.dscreen"
+
+function init(self)
+	msg.post("#", util.acquire_input_focus)
+end
+
+function on_input(self, action_id, action)
+	if action.pressed and action_id == util.g then
+		dscreen.push_screen(util.screen_game)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	dscreen.on_message(message_id, message, sender)
+end

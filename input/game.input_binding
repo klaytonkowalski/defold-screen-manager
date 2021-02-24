@@ -1,0 +1,20 @@
+key_trigger {
+  input: KEY_T
+  action: "t"
+}
+key_trigger {
+  input: KEY_G
+  action: "g"
+}
+key_trigger {
+  input: KEY_P
+  action: "p"
+}
+key_trigger {
+  input: KEY_O
+  action: "o"
+}
+key_trigger {
+  input: KEY_ESC
+  action: "esc"
+}

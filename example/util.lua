@@ -46,6 +46,19 @@ util.trigger_response = hash("trigger_response")
 util.unload = hash("unload")
 util.window_resized = hash("window_resized")
 
+util.screen_title = hash("screen_title")
+util.screen_game = hash("screen_game")
+util.screen_pause = hash("screen_pause")
+util.screen_options = hash("screen_options")
+
+util.t = hash("t")
+util.g = hash("g")
+util.p = hash("p")
+util.o = hash("o")
+util.esc = hash("esc")
+
+util.player = hash("player")
+
 function util.get_table(rows, columns, value)
 	local result = {}
 	for i = 1, rows do
