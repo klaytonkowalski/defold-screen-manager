@@ -14,9 +14,9 @@ local h_proxy_loaded = hash("proxy_loaded")
 local h_proxy_unloaded = hash("proxy_unloaded")
 
 dscreen.screen_types = {
-	basic,
-	pause,
-	toolbar
+	basic = 1,
+	pause = 2,
+	toolbar = 3
 }
 
 dscreen.msg = {
@@ -99,16 +99,18 @@ function dscreen.push_screen(screen_id)
 				end
 			end
 		elseif dscreen.registered_screens[screen_id].screen_type == dscreen.screen_types.pause then
-			local screen_info = dscreen.registered_screens[dscreen.screen_stack[i]]
-			if screen_info.parent_release == h_nil then
-				msg.post(screen_info.proxy_url, h_release_input_focus)
-				screen_info.has_input = false
-				screen_info.parent_release = screen_id
-			end
-			if screen_info.parent_pause == h_nil then
-				msg.post(screen_info.proxy_url, h_set_time_step, { factor = 0, mode = 0 })
-				screen_info.is_paused = false
-				screen_info.parent_pause = screen_id
+			for i = 1, #dscreen.screen_stack do
+				local screen_info = dscreen.registered_screens[dscreen.screen_stack[i]]
+				if screen_info.parent_release == h_nil then
+					msg.post(screen_info.proxy_url, h_release_input_focus)
+					screen_info.has_input = false
+					screen_info.parent_release = screen_id
+				end
+				if screen_info.parent_pause == h_nil then
+					msg.post(screen_info.proxy_url, h_set_time_step, { factor = 0, mode = 0 })
+					screen_info.is_paused = false
+					screen_info.parent_pause = screen_id
+				end
 			end
 		end
 		table.insert(dscreen.screen_stack, screen_id)

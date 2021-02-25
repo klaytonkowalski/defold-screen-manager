@@ -50,6 +50,7 @@ util.screen_title = hash("screen_title")
 util.screen_game = hash("screen_game")
 util.screen_pause = hash("screen_pause")
 util.screen_options = hash("screen_options")
+util.screen_toolbar = hash("screen_toolbar")
 
 util.t = hash("t")
 util.g = hash("g")

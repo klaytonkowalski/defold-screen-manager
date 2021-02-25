@@ -23,3 +23,6 @@ scale_mode = no_scale
 [library]
 include_dirs = dscreen
 
+[physics]
+world_count = 8
+

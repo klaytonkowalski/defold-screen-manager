@@ -6,6 +6,7 @@ function init(self)
 	dscreen.register_screen(util.screen_game, dscreen.screen_types.basic, msg.url("main", "/screen_game_proxy", "collectionproxy"), msg.url("screen_game", "/screen_game", "gui"))
 	dscreen.register_screen(util.screen_pause, dscreen.screen_types.pause, msg.url("main", "/screen_pause_proxy", "collectionproxy"), msg.url("screen_pause", "/screen_pause", "gui"))
 	dscreen.register_screen(util.screen_options, dscreen.screen_types.pause, msg.url("main", "/screen_options_proxy", "collectionproxy"), msg.url("screen_options", "/screen_options", "gui"))
+	dscreen.register_screen(util.screen_toolbar, dscreen.screen_types.toolbar, msg.url("main", "/screen_toolbar_proxy", "collectionproxy"), msg.url("screen_toolbar", "/screen_toolbar", "gui"))
 	dscreen.push_screen(util.screen_title)
 end
 
