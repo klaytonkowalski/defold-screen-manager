@@ -21,6 +21,8 @@ dscreen.screen_types = {
 
 dscreen.msg = {
 	pushed_in = hash("pushed_in"),
+	pushed_out = hash("pushed_out"),
+	popped_in = hash("popped_in"),
 	popped_out = hash("popped_out")
 }
 
@@ -76,40 +78,54 @@ function dscreen.push_screen(screen_id)
 		end
 		if dscreen.registered_screens[screen_id].screen_type == dscreen.screen_types.basic then
 			for i = 1, #dscreen.screen_stack do
+				local is_affected = false
 				local screen_info = dscreen.registered_screens[dscreen.screen_stack[i]]
 				if screen_info.parent_release == h_nil then
 					msg.post(screen_info.proxy_url, h_release_input_focus)
 					screen_info.has_input = false
 					screen_info.parent_release = screen_id
+					is_affected = true
 				end
 				if screen_info.parent_disable == h_nil then
 					msg.post(screen_info.proxy_url, h_disable)
 					screen_info.is_enabled = false
 					screen_info.parent_disable = screen_id
+					is_affected = true
 				end
 				if screen_info.parent_final == h_nil then
 					msg.post(screen_info.proxy_url, h_final)
 					screen_info.is_initialized = false
 					screen_info.parent_final = screen_id
+					is_affected = true
 				end
 				if screen_info.parent_pause == h_nil then
 					msg.post(screen_info.proxy_url, h_set_time_step, { factor = 0, mode = 0 })
 					screen_info.is_paused = false
 					screen_info.parent_pause = screen_id
+					is_affected = true
+				end
+				if is_affected then
+					msg.post(screen_info.script_url, dscreen.msg.pushed_out)
 				end
 			end
 		elseif dscreen.registered_screens[screen_id].screen_type == dscreen.screen_types.pause then
 			for i = 1, #dscreen.screen_stack do
+				local is_affected = false
 				local screen_info = dscreen.registered_screens[dscreen.screen_stack[i]]
 				if screen_info.parent_release == h_nil then
 					msg.post(screen_info.proxy_url, h_release_input_focus)
 					screen_info.has_input = false
 					screen_info.parent_release = screen_id
+					is_affected = true
 				end
 				if screen_info.parent_pause == h_nil then
 					msg.post(screen_info.proxy_url, h_set_time_step, { factor = 0, mode = 0 })
 					screen_info.is_paused = false
 					screen_info.parent_pause = screen_id
+					is_affected = true
+				end
+				if is_affected then
+					msg.post(screen_info.script_url, dscreen.msg.pushed_out)
 				end
 			end
 		end
@@ -158,26 +174,34 @@ function dscreen.pop_screen(count)
 			end
 		end
 		for i = 1, #dscreen.screen_stack do
+			local is_affected = false
 			local screen_info = dscreen.registered_screens[dscreen.screen_stack[i]]
 			if screen_info.parent_release ~= h_nil and not dscreen.registered_screens[screen_info.parent_release].is_pushed then
 				msg.post(screen_info.proxy_url, h_acquire_input_focus)
 				screen_info.has_input = true
 				screen_info.parent_release = h_nil
+				is_affected = true
 			end
 			if screen_info.parent_final ~= h_nil and not dscreen.registered_screens[screen_info.parent_final].is_pushed then
 				msg.post(screen_info.proxy_url, h_init)
 				screen_info.is_initialized = true
 				screen_info.parent_final = h_nil
+				is_affected = true
 			end
 			if screen_info.parent_disable ~= h_nil and not dscreen.registered_screens[screen_info.parent_disable].is_pushed then
 				msg.post(screen_info.proxy_url, h_enable)
 				screen_info.is_enabled = true
 				screen_info.parent_disable = h_nil
+				is_affected = true
 			end
 			if screen_info.parent_pause ~= h_nil and not dscreen.registered_screens[screen_info.parent_pause].is_pushed then
 				msg.post(screen_info.proxy_url, h_set_time_step, { factor = 1, mode = 0 })
 				screen_info.is_paused = false
 				screen_info.parent_pause = h_nil
+				is_affected = true
+			end
+			if is_affected then
+				msg.post(screen_info.script_url, dscreen.msg.popped_in)
 			end
 		end
 	end
