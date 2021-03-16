@@ -100,7 +100,8 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "This is the pause screen"
+  text: "This is the pause screen.\n"
+  "Press <esc> to return to the game screen."
   font: "roboto_regular"
   id: "screen_name"
   xanchor: XANCHOR_NONE

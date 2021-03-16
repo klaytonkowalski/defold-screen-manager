@@ -162,7 +162,8 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "This is the title screen"
+  text: "This is the title screen.\n"
+  "Press <g> to go to the game screen."
   font: "roboto_regular"
   id: "screen_name"
   xanchor: XANCHOR_NONE

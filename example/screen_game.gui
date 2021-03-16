@@ -162,7 +162,10 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "This is the game screen"
+  text: "This is the game screen.\n"
+  "Press <t> to toggle a toolbar screen.\n"
+  "Press <p> to toggle a pause screen.\n"
+  "Press <esc> to return to the title screen."
   font: "roboto_regular"
   id: "screen_name"
   xanchor: XANCHOR_NONE
