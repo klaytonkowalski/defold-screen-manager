@@ -14,7 +14,56 @@ To install dscreen into your project, add one of the following links to your `ga
   - URL of a [specific release](https://github.com/klaytonkowalski/defold-screen-manager/releases)
 
 ## Configuration
+Screen managers are impactful libraries in part because they require you to structure your project according to their expectations. In order to use dscreen, your project should consist of a main bootstrap collection, which contains all other game screens as objects with a collection proxy inside of them. For example:
 
+Main (Collection)  
+    Main (Game Object)  
+        Main (Script)  
+    Title Screen (Game Object)  
+        Title Screen (Collection Proxy)  
+    Options Screen (Game Object)  
+        Options Screen (Collection Proxy)  
+    Game World Screen (Game Object)  
+        Game World Screen (Collection Proxy)  
+    Pause Screen (Game Object)  
+        Pause Screen (Collection Proxy)  
+    Inventory Screen (Game Object)  
+        Inventory Screen (Collection Proxy)
+
+The "Main (Script)" is where you will configure dscreen. Import the dscreen module into your main script like so:  
+`local dscreen = require "dscreen.dscreen"`
+
+In order for dscreen to recognize each collection proxy as a screen, you must register each of them like so:
+
+```
+function init(self)
+	  dscreen.register_screen(hash("title"), dscreen.screen_types.basic, msg.url("main", "/title", "collectionproxy"), msg.url("title", "/gui", "gui"))
+	  dscreen.register_screen(hash("game"), dscreen.screen_types.basic, msg.url("main", "/game", "collectionproxy"), msg.url("game", "/gui", "gui"))
+	  dscreen.register_screen(hash("pause"), dscreen.screen_types.pause, msg.url("main", "/pause", "collectionproxy"), msg.url("pause", "/gui", "gui"))
+	  dscreen.register_screen(hash("options"), dscreen.screen_types.pause, msg.url("main", "/options", "collectionproxy"), msg.url("options", "/gui", "gui"))
+	  dscreen.register_screen(hash("inventory"), dscreen.screen_types.toolbar, msg.url("main", "/inventory", "collectionproxy"), msg.url("inventory", "/gui", "gui"))
+	  dscreen.push_screen(hash("title"))
+end
+
+function on_message(self, message_id, message, sender)
+	  dscreen.on_message(message_id, message, sender)
+end
+```
+
+In the example above, five screens were registered using the `dscreen.register_screen()` function:  
+1. Title Screen
+2. Game Screen
+3. Pause Screen
+4. Options Screen
+5. Inventory Screen
+
+Each screen is registered along with its screen type, collection proxy URL, and script URL. All screen types and their explanations can be found in the `dscreen.screen_types` [table](dscreenscreen_types). In this example, the inventory screen is set to `dscreen.screen_types.toolbar` so that it can be toggled on and off while the player is roaming around the game world.
+
+The `dscreen.push_screen()` function is then called, with an argument of `hash("title")`. This ensures that the first screen the player sees when loading the game is the title screen.
+
+It is important to remember to always include the `dscreen.on_message()` function inside of your script's `on_message()` function. Each of your screens must contain a script that handles these messages. Defold's engine utilizes the `hash("proxy_loaded")` and `hash("proxy_unloaded")` messages to alert the developer of collection proxy status.
+
+Registered screen are loaded the first time they are pushed to the stack. If they are eventually popped off the stack, they are *not* unloaded--only disabled and finalized. Use the `dscreen.unload_screen()` to fully unload a screen. Please read this function's [documentation](dscreenunload_screen) to learn about when to unload a screen.
 
 ## API: Properties
 
@@ -101,10 +150,10 @@ Unloads a screen. Fails if the screen currently resides on the stack.
 
 Example of when to potentially unload a screen:
 
-*Current screen = GameWorldScreen*
-GameWorldScreen --> PauseScreen, InventoryScreen
-PauseScreen --> OptionsScreen, TitleScreen
-TitleScreen --> OptionsScreen, GameWorldScreen
+*Current screen = GameWorldScreen*  
+GameWorldScreen --> PauseScreen, InventoryScreen  
+PauseScreen --> OptionsScreen, TitleScreen  
+TitleScreen --> OptionsScreen, GameWorldScreen  
 
 Since there is no way to traverse from GameWorldScreen to TitleScreen, it may be a good idea to `dscreen.unload(TitleScreen)` after GameWorldScreen is loaded and displayed.
 
