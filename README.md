@@ -16,6 +16,7 @@ To install dscreen into your project, add one of the following links to your `ga
 ## Configuration
 Screen managers are impactful libraries in part because they require you to structure your project according to their expectations. In order to use dscreen, your project should consist of a main bootstrap collection, which contains all other game screens as objects with a collection proxy inside of them. For example:
 
+```
 Main (Collection)  
     Main (Game Object)  
         Main (Script)  
@@ -29,6 +30,7 @@ Main (Collection)
         Pause Screen (Collection Proxy)  
     Inventory Screen (Game Object)  
         Inventory Screen (Collection Proxy)
+```
 
 The "Main (Script)" is where you will configure dscreen. Import the dscreen module into your main script like so:  
 `local dscreen = require "dscreen.dscreen"`
@@ -57,13 +59,13 @@ In the example above, five screens were registered using the `dscreen.register_s
 4. Options Screen
 5. Inventory Screen
 
-Each screen is registered along with its screen type, collection proxy URL, and script URL. All screen types and their explanations can be found in the `dscreen.screen_types` [table](dscreenscreen_types). In this example, the inventory screen is set to `dscreen.screen_types.toolbar` so that it can be toggled on and off while the player is roaming around the game world.
+Each screen is registered along with its screen type, collection proxy URL, and script URL. All screen types and their explanations can be found in the `dscreen.screen_types` [table](#dscreenscreen_types). In this example, the inventory screen is set to `dscreen.screen_types.toolbar` so that it can be toggled on and off while the player is roaming around the game world.
 
 The `dscreen.push_screen()` function is then called, with an argument of `hash("title")`. This ensures that the first screen the player sees when loading the game is the title screen.
 
 It is important to remember to always include the `dscreen.on_message()` function inside of your script's `on_message()` function. Each of your screens must contain a script that handles these messages. Defold's engine utilizes the `hash("proxy_loaded")` and `hash("proxy_unloaded")` messages to alert the developer of collection proxy status.
 
-Registered screen are loaded the first time they are pushed to the stack. If they are eventually popped off the stack, they are *not* unloaded--only disabled and finalized. Use the `dscreen.unload_screen()` to fully unload a screen. Please read this function's [documentation](dscreenunload_screen) to learn about when to unload a screen.
+Registered screen are loaded the first time they are pushed to the stack. If they are eventually popped off the stack, they are *not* unloaded--only disabled and finalized. Use the `dscreen.unload_screen()` to fully unload a screen. Please read this function's [documentation](#dscreenunload_screenscreen_id) to learn about when to unload a screen.
 
 ## API: Properties
 
